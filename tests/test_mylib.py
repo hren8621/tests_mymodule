@@ -57,15 +57,15 @@ class Tests:
     #     assert popup.build() == "Random Popup"
     #     mock_create_random_popup.assert_called_once()
 
-    # def test_create_popup(self, popup):
-    #     popup._bgColor = [1, 1, 1, 1]
-    #     layout = popup._createPopup()
+    def test_create_popup(self, popup):
+        popup._bgColor = [1, 1, 1, 1]
+        layout = popup._createPopup()
         
-    #     assert Window.clearcolor == popup._bgColor, "Window.clearcolor was not set correctly!"
-    #     assert isinstance(layout, BoxLayout), "Expected layout to be a BoxLayout"
-    #     assert len(layout.children) == 1, "Expected layout to have 1 child"
-    #     assert isinstance(layout.children[0], Label), "Expected child to be a Label"
-    #     assert layout.children[0].text == popup._message, "Label text does not match expected default message"
+        assert core.window.Window.clearcolor == popup._bgColor, "Window.clearcolor was not set correctly!"
+        assert isinstance(layout, uix.BoxLayout), "Expected layout to be a BoxLayout"
+        assert len(layout.children) == 1, "Expected layout to have 1 child"
+        assert isinstance(layout.children[0], uix.Label), "Expected child to be a Label"
+        assert layout.children[0].text == popup._message, "Label text does not match expected default message"
 
     # def test_display_popup_defaults(self, popup, mocker):
     #     """Test displayPopup when no arguments are provided."""
