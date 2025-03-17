@@ -18,7 +18,6 @@ jobs:
           pipenv install -e .
       - name: Test with pytest
         run: |
-          pipenv install matplotlib  
           pipenv install kivy    
           pipenv install pytest
           pipenv --venv
