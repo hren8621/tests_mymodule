@@ -2,8 +2,9 @@ import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib
 from kivy import app
-from kivy import uix
-from kivy import core
+from kivy.uix import label
+from kivy.uix import boxlayout
+from kivy.core import window
 
 class Tests:
 
@@ -61,10 +62,10 @@ class Tests:
         popup._bgColor = [1, 1, 1, 1]
         layout = popup._createPopup()
         
-        assert core.window.Window.clearcolor == popup._bgColor, "Window.clearcolor was not set correctly!"
-        assert isinstance(layout, uix.BoxLayout), "Expected layout to be a BoxLayout"
+        assert window.Window.clearcolor == popup._bgColor, "Window.clearcolor was not set correctly!"
+        assert isinstance(layout, boxlayout.BoxLayout), "Expected layout to be a BoxLayout"
         assert len(layout.children) == 1, "Expected layout to have 1 child"
-        assert isinstance(layout.children[0], uix.Label), "Expected child to be a Label"
+        assert isinstance(layout.children[0], label.Label), "Expected child to be a Label"
         assert layout.children[0].text == popup._message, "Label text does not match expected default message"
 
     # def test_display_popup_defaults(self, popup, mocker):

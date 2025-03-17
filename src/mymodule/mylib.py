@@ -3,8 +3,9 @@
 # from kivy.uix.boxlayout import BoxLayout
 # from kivy.core.window import Window
 from kivy import app
-from kivy import uix
-from kivy import core
+from kivy.uix import label
+from kivy.uix import boxlayout
+from kivy.core import window
 import random
 
 class PopupMessage(app.App):
@@ -70,11 +71,11 @@ class PopupMessage(app.App):
         """
         Protected method: Create the pop-up message window using the configured properties
         """
-        core.window.Window.clearcolor = self._bgColor  
-        layout = uix.BoxLayout(orientation='vertical')
-        label = uix.Label(text=self._message, color=self._fontColor, font_size=self._fontSize)
+        window.Window.clearcolor = self._bgColor  
+        layout = boxlayout.BoxLayout(orientation='vertical')
+        msglabel = label.Label(text=self._message, color=self._fontColor, font_size=self._fontSize)
         
-        layout.add_widget(label)
+        layout.add_widget(msglabel)
         return layout
     
     def displayPopup(self, msg=None, bgColor=None, fontColor=None, fontSize=None, timerDuration=None):
