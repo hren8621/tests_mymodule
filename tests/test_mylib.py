@@ -1,6 +1,5 @@
 import pytest
 from mymodule import mylib
-import kivy
 
 class Tests:
 

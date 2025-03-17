@@ -16,3 +16,5 @@ if __name__ == '__main__':
     mm.printMyMsgCount()
     mm.changeMyMsgCount("This is a new msg", 10)
     mm.printMyMsgCount()
+    import kivy
+    print(kivy.__version__)
