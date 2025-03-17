@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 pytest = "*"
 kivy = "*"
-matplotlib = "*"
 pytest-mock = "*"
 
 [dev-packages]
