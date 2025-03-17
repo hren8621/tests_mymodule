@@ -15,7 +15,7 @@ keywords = ["popup", "debugging", "notifications", "GUI", "Kivy"]
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = [
-  "kivy"
+  "kivy[base]"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
