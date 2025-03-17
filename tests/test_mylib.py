@@ -2,7 +2,7 @@ import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib
 #from kivy import core
-import kivy
+from kivy import app
 
 class Tests:
 

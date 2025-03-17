@@ -1,10 +1,13 @@
-from kivy.app import App
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.core.window import Window
+# from kivy.app import App
+# from kivy.uix.label import Label
+# from kivy.uix.boxlayout import BoxLayout
+# from kivy.core.window import Window
+from kivy import app
+from kivy import uix
+from kivy import core
 import random
 
-class PopupMessage(App):
+class PopupMessage(app.App):
     # Static class variables
     POPUP_TYPE_REGULAR = 0
     POPUP_TYPE_TIMER = 1
@@ -67,9 +70,9 @@ class PopupMessage(App):
         """
         Protected method: Create the pop-up message window using the configured properties
         """
-        Window.clearcolor = self._bgColor  
-        layout = BoxLayout(orientation='vertical')
-        label = Label(text=self._message, color=self._fontColor, font_size=self._fontSize)
+        core.window.Window.clearcolor = self._bgColor  
+        layout = uix.BoxLayout(orientation='vertical')
+        label = uix.Label(text=self._message, color=self._fontColor, font_size=self._fontSize)
         
         layout.add_widget(label)
         return layout
