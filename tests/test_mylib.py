@@ -1,6 +1,7 @@
 import pytest
 from mymodule import mylib
 import matplotlib
+import kivy
 
 class Tests:
 

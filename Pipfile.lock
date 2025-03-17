@@ -278,9 +278,6 @@
             "version": "==2.0.0"
         },
         "kivy": {
-            "extras": [
-                "base"
-            ],
             "hashes": [
                 "sha256:002de19fef53955c48108758beea3092cf281326642d2e71eca1c443f4227cce",
                 "sha256:0833949e3502cdb4abcf9c1da4384674045ad7d85644313aa1ee7573f3b4f9d9",
@@ -308,6 +305,7 @@
                 "sha256:ee628e5dbe5e397ceeeda7b49cf4c800b79a695c6345fee1a8f1b71d3fc530bb",
                 "sha256:f180280df46a8c2f9988159938aa1a3e5a0094060d9586ea79df4b4ead9cad98"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==2.3.1"
         },
