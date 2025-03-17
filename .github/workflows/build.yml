@@ -20,5 +20,6 @@ jobs:
         run: |
           pipenv install kivy    
           pipenv install pytest
+          pipenv install pytest_mock
           pipenv --venv
           pipenv run python -m pytest

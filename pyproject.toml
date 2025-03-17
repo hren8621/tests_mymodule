@@ -11,11 +11,10 @@ authors = [
 ]
 description = "A package that allows developers to create popup messages to aid in debugging and add some spice into their coding process."
 readme = "README.md"
-keywords = ["popup", "debugging", "notifications", "GUI", "Matplotlib", "Kivy"]
+keywords = ["popup", "debugging", "notifications", "GUI", "Kivy"]
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = [
-  "matplotlib",
   "kivy"
 ]
 classifiers = [
@@ -25,7 +24,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "matplotlib", "kivy"]
+dev = ["pytest", "kivy"]
 
 [project.urls]
 Repository = "https://github.com/software-students-spring2025/3-python-package-push-then-pull/"
