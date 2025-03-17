@@ -1,6 +1,7 @@
 import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib
+from kivy import core
 
 class Tests:
 
@@ -17,7 +18,7 @@ class Tests:
         assert actual == expected, "Expected True to be equal to True!"
 
     def test_initializations(self, popup):
-        assert popup._type == PopupMessage.POPUP_TYPE_REGULAR
+        assert popup._type == mylib.PopupMessage.POPUP_TYPE_REGULAR
         assert popup._message == "Default Message"
         assert popup._bgColor == "white"
         assert popup._fontColor == "black"
