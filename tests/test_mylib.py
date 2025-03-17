@@ -1,5 +1,6 @@
 import pytest
 from mymodule import mylib
+import matplotlib
 
 class Tests:
 

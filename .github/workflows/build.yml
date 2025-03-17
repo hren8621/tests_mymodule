@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Python, pipenv and Pipfile packages
-        uses: hren8621/test_mymodule@v1
+        uses: kojoru/prepare-pipenv@v1
         with:
           python-version: ${{ matrix.python-version }}
       - name: Turn on 'editable' mode
@@ -18,7 +18,7 @@ jobs:
           pipenv install -e .
       - name: Test with pytest
         run: |
-          pipenv install "kivy[base]"      
+          pipenv install matplotlib      
           pipenv install pytest
           pipenv --venv
           pipenv run python -m pytest
