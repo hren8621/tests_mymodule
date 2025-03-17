@@ -1,7 +1,8 @@
 import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib
-from kivy import core
+#from kivy import core
+import kivy
 
 class Tests:
 
