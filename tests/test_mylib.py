@@ -1,11 +1,11 @@
 import pytest
 from mymodule import mylib
+import kivy
 
 class Tests:
 
     @pytest.fixture
     def mymod(self):
-        from kivy.core.window import Window
         """Fixture to create a new PopupMessage instance before each test"""
         ml_instance = mylib.MySimpleModule()
         return ml_instance
