@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+kivy = {extras = ["base"], version = "*"}
 
 [dev-packages]
 

@@ -1,4 +1,5 @@
 import pytest
+from kivy.core.window import Window
 from mymodule import mylib
 
 class Tests:

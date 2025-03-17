@@ -13,6 +13,9 @@ jobs:
         uses: kojoru/prepare-pipenv@v1
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install Kivy package
+        run: |
+          pipenv install "kivy[base]"
       - name: Turn on 'editable' mode
         run: |
           pipenv install -e .
