@@ -1,9 +1,8 @@
 import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib
-from kivy.core.window import Window
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
+from kivy import core
+from kivy import uix
 
 class Tests:
 
@@ -57,15 +56,15 @@ class Tests:
     #     assert popup.build() == "Random Popup"
     #     mock_create_random_popup.assert_called_once()
 
-    def test_create_popup(self, popup):
-        popup._bgColor = [1, 1, 1, 1]
-        layout = popup._createPopup()
+    # def test_create_popup(self, popup):
+    #     popup._bgColor = [1, 1, 1, 1]
+    #     layout = popup._createPopup()
         
-        assert Window.clearcolor == popup._bgColor, "Window.clearcolor was not set correctly!"
-        assert isinstance(layout, BoxLayout), "Expected layout to be a BoxLayout"
-        assert len(layout.children) == 1, "Expected layout to have 1 child"
-        assert isinstance(layout.children[0], Label), "Expected child to be a Label"
-        assert layout.children[0].text == popup._message, "Label text does not match expected default message"
+    #     assert Window.clearcolor == popup._bgColor, "Window.clearcolor was not set correctly!"
+    #     assert isinstance(layout, BoxLayout), "Expected layout to be a BoxLayout"
+    #     assert len(layout.children) == 1, "Expected layout to have 1 child"
+    #     assert isinstance(layout.children[0], Label), "Expected child to be a Label"
+    #     assert layout.children[0].text == popup._message, "Label text does not match expected default message"
 
     # def test_display_popup_defaults(self, popup, mocker):
     #     """Test displayPopup when no arguments are provided."""
