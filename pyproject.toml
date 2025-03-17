@@ -15,8 +15,7 @@ keywords = ["popup", "debugging", "notifications", "GUI", "Kivy"]
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = [
-  "kivy",
-  "pytest-mock"
+  "kivy"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -25,7 +24,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "kivy", "pytest-mock"]
+dev = ["pytest"]
 
 [project.urls]
 Repository = "https://github.com/software-students-spring2025/3-python-package-push-then-pull/"

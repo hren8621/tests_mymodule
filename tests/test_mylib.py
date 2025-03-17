@@ -1,16 +1,16 @@
 import pytest
 # from pytest_mock import MockerFixture
+from mymodule import mylib
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from mymodule.mylib import PopupMessage  
 
 class Tests:
 
     @pytest.fixture
     def popup(self):
         """Fixture to create a new PopupMessage instance before each test"""
-        return PopupMessage()
+        return mylib.PopupMessage()
         
     # Test functions
     def test_sanity_check(self):
