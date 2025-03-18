@@ -2,11 +2,11 @@ name: CI / CD
 on: [push] # TO CHANGE: Should be on pull request
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15
     timeout-minutes: 5
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.13"]
     steps:
       - uses: actions/checkout@v4
       - name: Install Python, pipenv and Pipfile packages
@@ -24,8 +24,8 @@ jobs:
       - name: Test with pytest
         run: |
           pipenv install "kivy[base]"
-          echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.10/site-packages/kivy/core/window/"
-          ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.10/site-packages/kivy/core/window/
+          echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/"
+          ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
