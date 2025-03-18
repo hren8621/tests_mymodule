@@ -29,6 +29,8 @@ jobs:
           pipenv install "kivy[base]"
           echo "ls -al /Users/runner/"
           ls -al /Users/runner/
+          echo "ls -al /Users/runner/Documents"
+          ls -al /Users/runner/Documents
           echo "ls -al /Users/runner/work"
           ls -al /Users/runner/work
           echo "ls -al /Users/runner/work/tests_mymodule/"
