@@ -71,10 +71,10 @@ class PopupMessage(app.App):
         """
         Protected method: Create the pop-up message window using the configured properties
         """
-        Window.clearcolor = self._bgColor  
+         
         layout = boxlayout.BoxLayout(orientation='vertical')
         msglabel = label.Label(text=self._message, color=self._fontColor, font_size=self._fontSize)
-        
+        Window.clearcolor = self._bgColor
         layout.add_widget(msglabel)
         return layout
     
