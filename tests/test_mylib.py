@@ -1,5 +1,7 @@
-import pytest
 import os
+os.environ['KIVY_DOC'] = '1'
+
+import pytest
 # from pytest_mock import MockerFixture
 from src.mymodule import mylib
 # from kivy.uix.label import Label
@@ -10,9 +12,6 @@ class Tests:
 
     @pytest.fixture
     def popup(self):
-        env_vars = os.environ
-        print(env_vars)
-        os.environ['KIVY_DOC'] = '1'
         """Fixture to create a new PopupMessage instance before each test"""
         return mylib.PopupMessage()
         
