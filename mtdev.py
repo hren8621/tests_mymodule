@@ -1,258 +1,380 @@
 '''
-Python mtdev
-============
+Native support for Multitouch devices on Linux, using libmtdev.
+===============================================================
 
-The mtdev module provides Python bindings to the `Kernel multi-touch
-transformation library <https://launchpad.net/mtdev>`_, also known as mtdev
-(MIT license).
+The Mtdev project is a part of the Ubuntu Maverick multitouch architecture.
+You can read more on http://wiki.ubuntu.com/Multitouch
 
-The mtdev library transforms all variants of kernel MT events to the
-slotted type B protocol. The events put into mtdev may be from any MT
-device, specifically type A without contact tracking, type A with
-contact tracking, or type B with contact tracking. See the kernel
-documentation for further details.
+To configure MTDev, it's preferable to use probesysfs providers.
+Check :py:class:`~kivy.input.providers.probesysfs` for more information.
 
-.. warning::
+Otherwise, add this to your configuration::
 
-    This is an external library and Kivy does not provide any support for it.
-    It might change in the future and we advise you don't rely on it in your
-    code.
+    [input]
+    # devicename = hidinput,/dev/input/eventXX
+    acert230h = mtdev,/dev/input/event2
+
+.. note::
+    You must have read access to the input event.
+
+You can use a custom range for the X, Y and pressure values.
+On some drivers, the range reported is invalid.
+To fix that, you can add these options to the argument line:
+
+* invert_x : 1 to invert X axis
+* invert_y : 1 to invert Y axis
+* min_position_x : X minimum
+* max_position_x : X maximum
+* min_position_y : Y minimum
+* max_position_y : Y maximum
+* min_pressure : pressure minimum
+* max_pressure : pressure maximum
+* min_touch_major : width shape minimum
+* max_touch_major : width shape maximum
+* min_touch_minor : width shape minimum
+* max_touch_minor : height shape maximum
+* rotation : 0,90,180 or 270 to rotate
+
+An inverted display configuration will look like this::
+
+    [input]
+    # example for inverting touch events
+    display = mtdev,/dev/input/event0,invert_x=1,invert_y=1
 '''
-# flake8: noqa
+
+__all__ = ('MTDMotionEventProvider', 'MTDMotionEvent')
 
 import os
+import os.path
 import time
-from ctypes import cdll, Structure, c_ulong, c_int, c_ushort, \
-                   c_void_p, pointer, POINTER, byref
-
-# load library
-if 'KIVY_DOC' not in os.environ:
-    try:
-        libmtdev = cdll.LoadLibrary('libmtdev.so.1')
-    except OSError:
-        libmtdev = None
-        print("libmtdev.so.1 not found, multi-touch events might be limited")
-
-# from linux/input.h
-MTDEV_CODE_SLOT          = 0x2f  # MT slot being modified
-MTDEV_CODE_TOUCH_MAJOR   = 0x30    # Major axis of touching ellipse
-MTDEV_CODE_TOUCH_MINOR   = 0x31    # Minor axis (omit if circular)
-MTDEV_CODE_WIDTH_MAJOR   = 0x32    # Major axis of approaching ellipse
-MTDEV_CODE_WIDTH_MINOR   = 0x33    # Minor axis (omit if circular)
-MTDEV_CODE_ORIENTATION   = 0x34    # Ellipse orientation
-MTDEV_CODE_POSITION_X    = 0x35    # Center X ellipse position
-MTDEV_CODE_POSITION_Y    = 0x36    # Center Y ellipse position
-MTDEV_CODE_TOOL_TYPE     = 0x37    # Type of touching device
-MTDEV_CODE_BLOB_ID       = 0x38    # Group a set of packets as a blob
-MTDEV_CODE_TRACKING_ID   = 0x39    # Unique ID of initiated contact
-MTDEV_CODE_PRESSURE      = 0x3a    # Pressure on contact area
-MTDEV_CODE_ABS_X		 = 0x00
-MTDEV_CODE_ABS_Y		 = 0x01
-MTDEV_CODE_ABS_Z		 = 0x02
-MTDEV_CODE_BTN_DIGI		        = 0x140
-MTDEV_CODE_BTN_TOOL_PEN		    = 0x140
-MTDEV_CODE_BTN_TOOL_RUBBER		= 0x141
-MTDEV_CODE_BTN_TOOL_BRUSH		= 0x142
-MTDEV_CODE_BTN_TOOL_PENCIL		= 0x143
-MTDEV_CODE_BTN_TOOL_AIRBRUSH	= 0x144
-MTDEV_CODE_BTN_TOOL_FINGER		= 0x145
-MTDEV_CODE_BTN_TOOL_MOUSE		= 0x146
-MTDEV_CODE_BTN_TOOL_LENS		= 0x147
-MTDEV_CODE_BTN_TOUCH		    = 0x14a
-MTDEV_CODE_BTN_STYLUS		    = 0x14b
-MTDEV_CODE_BTN_STYLUS2		    = 0x14c
-MTDEV_CODE_BTN_TOOL_DOUBLETAP	= 0x14d
-MTDEV_CODE_BTN_TOOL_TRIPLETAP	= 0x14e
-MTDEV_CODE_BTN_TOOL_QUADTAP	    = 0x14f	# Four fingers on trackpad
-
-MTDEV_TYPE_EV_ABS        = 0x03
-MTDEV_TYPE_EV_SYN        = 0x00
-MTDEV_TYPE_EV_KEY        = 0x01
-MTDEV_TYPE_EV_REL        = 0x02
-MTDEV_TYPE_EV_ABS        = 0x03
-MTDEV_TYPE_EV_MSC        = 0x04
-MTDEV_TYPE_EV_SW         = 0x05
-MTDEV_TYPE_EV_LED        = 0x11
-MTDEV_TYPE_EV_SND        = 0x12
-MTDEV_TYPE_EV_REP        = 0x14
-MTDEV_TYPE_EV_FF         = 0x15
-MTDEV_TYPE_EV_PWR        = 0x16
-MTDEV_TYPE_EV_FF_STATUS  = 0x17
-
-MTDEV_ABS_TRACKING_ID	= 9
-MTDEV_ABS_POSITION_X	= 5
-MTDEV_ABS_POSITION_Y	= 6
-MTDEV_ABS_TOUCH_MAJOR	= 0
-MTDEV_ABS_TOUCH_MINOR	= 1
-MTDEV_ABS_WIDTH_MAJOR	= 2
-MTDEV_ABS_WIDTH_MINOR	= 3
-MTDEV_ABS_ORIENTATION	= 4
-MTDEV_ABS_SIZE          = 11
-
-class timeval(Structure):
-    _fields_ = [
-        ('tv_sec', c_ulong),
-        ('tv_usec', c_ulong)
-    ]
-
-class input_event(Structure):
-    _fields_ = [
-        ('time', timeval),
-        ('type', c_ushort),
-        ('code', c_ushort),
-        ('value', c_int)
-    ]
-
-class input_absinfo(Structure):
-    _fields_ = [
-        ('value', c_int),
-        ('minimum', c_int),
-        ('maximum', c_int),
-        ('fuzz', c_int),
-        ('flat', c_int),
-        ('resolution', c_int)
-    ]
-
-class mtdev_caps(Structure):
-    _fields_ = [
-        ('has_mtdata', c_int),
-        ('has_slot', c_int),
-        ('has_abs', c_int * MTDEV_ABS_SIZE),
-        ('slot', input_absinfo),
-        ('abs', input_absinfo * MTDEV_ABS_SIZE)
-    ]
-
-class mtdev(Structure):
-    _fields_ = [
-        ('caps', mtdev_caps),
-        ('state', c_void_p)
-    ]
-
-# binding
-if 'KIVY_DOC' not in os.environ:
-    mtdev_open = libmtdev.mtdev_open
-    mtdev_open.argtypes = [POINTER(mtdev), c_int]
-    mtdev_get = libmtdev.mtdev_get
-    mtdev_get.argtypes = [POINTER(mtdev), c_int, POINTER(input_event), c_int]
-    mtdev_idle = libmtdev.mtdev_idle
-    mtdev_idle.argtypes = [POINTER(mtdev), c_int, c_int]
-    mtdev_close = libmtdev.mtdev_close
-    mtdev_close.argtypes = [POINTER(mtdev)]
+from kivy.input.motionevent import MotionEvent
+from kivy.input.shape import ShapeRect
 
 
-class Device:
-    def __init__(self, filename):
-        self._filename = filename
-        self._fd = -1
-        self._device = mtdev()
+class MTDMotionEvent(MotionEvent):
 
-        # Linux kernel creates input devices then hands permission changes
-        # off to udev. This results in a period of time when the device is
-        # readable only by root. Device reconnects can be processed by
-        # MTDMotionEventProvider faster than udev can get a chance to run,
-        # so we spin for a period of time to allow udev to fix permissions.
-        # We limit the loop time in case the system is misconfigured and
-        # the user really does not (and will not) have permission to access
-        # the device.
-        # Note: udev takes about 0.6 s on a Raspberry Pi 4
-        permission_wait_until = time.time() + 3.0
-        while self._fd == -1:
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('is_touch', True)
+        kwargs.setdefault('type_id', 'touch')
+        super().__init__(*args, **kwargs)
+
+    def depack(self, args):
+        if 'x' in args:
+            self.sx = args['x']
+        else:
+            self.sx = -1
+        if 'y' in args:
+            self.sy = args['y']
+        else:
+            self.sy = -1
+        self.profile = ['pos']
+        if 'size_w' in args and 'size_h' in args:
+            self.shape = ShapeRect()
+            self.shape.width = args['size_w']
+            self.shape.height = args['size_h']
+            self.profile.append('shape')
+        if 'pressure' in args:
+            self.pressure = args['pressure']
+            self.profile.append('pressure')
+        super().depack(args)
+
+    def __str__(self):
+        i, sx, sy, d = (self.id, self.sx, self.sy, self.device)
+        return '<MTDMotionEvent id=%d pos=(%f, %f) device=%s>' % (i, sx, sy, d)
+
+
+if 'KIVY_DOC' in os.environ:
+
+    # documentation hack
+    MTDMotionEventProvider = None
+
+else:
+    import threading
+    import collections
+   # from kivy.lib.mtdev import Device, \
+   #     MTDEV_TYPE_EV_ABS, MTDEV_CODE_SLOT, MTDEV_CODE_POSITION_X, \
+   #     MTDEV_CODE_POSITION_Y, MTDEV_CODE_PRESSURE, \
+   #     MTDEV_CODE_TOUCH_MAJOR, MTDEV_CODE_TOUCH_MINOR, \
+   #     MTDEV_CODE_TRACKING_ID, MTDEV_ABS_POSITION_X, \
+   #     MTDEV_ABS_POSITION_Y, MTDEV_ABS_TOUCH_MINOR, \
+   #     MTDEV_ABS_TOUCH_MAJOR, MTDEV_TYPE_EV_SYN
+    from kivy.input.provider import MotionEventProvider
+    from kivy.input.factory import MotionEventFactory
+    from kivy.logger import Logger
+
+    class MTDMotionEventProvider(MotionEventProvider):
+
+        options = ('min_position_x', 'max_position_x',
+                   'min_position_y', 'max_position_y',
+                   'min_pressure', 'max_pressure',
+                   'min_touch_major', 'max_touch_major',
+                   'min_touch_minor', 'max_touch_minor',
+                   'invert_x', 'invert_y',
+                   'rotation')
+
+        def __init__(self, device, args):
+            super(MTDMotionEventProvider, self).__init__(device, args)
+            self._device = None
+            self.input_fn = None
+            self.default_ranges = dict()
+
+            # split arguments
+            args = args.split(',')
+            if not args:
+                Logger.error('MTD: No filename pass to MTD configuration')
+                Logger.error('MTD: Use /dev/input/event0 for example')
+                return
+
+            # read filename
+            self.input_fn = args[0]
+            Logger.info('MTD: Read event from <%s>' % self.input_fn)
+
+            # read parameters
+            for arg in args[1:]:
+                if arg == '':
+                    continue
+                arg = arg.split('=')
+
+                # ensure it's a key = value
+                if len(arg) != 2:
+                    err = 'MTD: Bad parameter %s: Not in key=value format' %\
+                        arg
+                    Logger.error(err)
+                    continue
+
+                # ensure the key exist
+                key, value = arg
+                if key not in MTDMotionEventProvider.options:
+                    Logger.error('MTD: unknown %s option' % key)
+                    continue
+
+                # ensure the value
+                try:
+                    self.default_ranges[key] = int(value)
+                except ValueError:
+                    err = 'MTD: invalid value %s for option %s' % (key, value)
+                    Logger.error(err)
+                    continue
+
+                # all good!
+                Logger.info('MTD: Set custom %s to %d' % (key, int(value)))
+
+            if 'rotation' not in self.default_ranges:
+                self.default_ranges['rotation'] = 0
+            elif self.default_ranges['rotation'] not in (0, 90, 180, 270):
+                Logger.error('HIDInput: invalid rotation value ({})'.format(
+                    self.default_ranges['rotation']))
+                self.default_ranges['rotation'] = 0
+
+        def start(self):
+            if self.input_fn is None:
+                return
+            self.uid = 0
+            self.queue = collections.deque()
+            self.thread = threading.Thread(
+                name=self.__class__.__name__,
+                target=self._thread_run,
+                kwargs=dict(
+                    queue=self.queue,
+                    input_fn=self.input_fn,
+                    device=self.device,
+                    default_ranges=self.default_ranges))
+            self.thread.daemon = True
+            self.thread.start()
+
+        def _thread_run(self, **kwargs):
+            input_fn = kwargs.get('input_fn')
+            queue = kwargs.get('queue')
+            device = kwargs.get('device')
+            drs = kwargs.get('default_ranges').get
+            touches = {}
+            touches_sent = []
+            point = {}
+            l_points = {}
+            changes = set()
+
+            def assign_coord(point, value, invert, coords):
+                cx, cy = coords
+                if invert:
+                    value = 1. - value
+                if rotation == 0:
+                    point[cx] = value
+                elif rotation == 90:
+                    point[cy] = value
+                elif rotation == 180:
+                    point[cx] = 1. - value
+                elif rotation == 270:
+                    point[cy] = 1. - value
+
+            def process(points):
+                changes.clear()
+                for args in points:
+                    # this can happen if we have a touch going on already at
+                    # the start of the app
+                    if 'id' not in args:
+                        continue
+                    tid = args['id']
+                    try:
+                        touch = touches[tid]
+                    except KeyError:
+                        touch = MTDMotionEvent(device, tid, args)
+                        touches[touch.id] = touch
+                    touch.move(args)
+                    action = 'update'
+                    if tid not in touches_sent:
+                        action = 'begin'
+                        touches_sent.append(tid)
+                    if 'delete' in args:
+                        action = 'end'
+                        del args['delete']
+                        del touches[touch.id]
+                        touches_sent.remove(tid)
+                        touch.update_time_end()
+                    queue.append((action, touch))
+
+            def normalize(value, vmin, vmax):
+                try:
+                    return (value - vmin) / float(vmax - vmin)
+                except ZeroDivisionError:  # it's both in py2 and py3
+                    return (value - vmin)
+
+            # open mtdev device
+            _fn = input_fn
+            _slot = 0
             try:
-                self._fd = os.open(filename, os.O_NONBLOCK | os.O_RDONLY)
-            except PermissionError:
-                if time.time() > permission_wait_until:
+                _device = Device(_fn)
+            except OSError as e:
+                if e.errno == 13:  # Permission denied
+                    Logger.warn(
+                        'MTD: Unable to open device "{0}". Please ensure you'
+                        ' have the appropriate permissions.'.format(_fn))
+                    return
+                else:
                     raise
-        ret = mtdev_open(pointer(self._device), self._fd)
-        if ret != 0:
-            os.close(self._fd)
-            self._fd = -1
-            raise Exception('Unable to open device')
 
-    def close(self):
-        '''Close the mtdev converter
-        '''
-        if self._fd == -1:
-            return
-        mtdev_close(pointer(self._device))
-        os.close(self._fd)
-        self._fd = -1
+            # prepare some vars to get limit of some component
+            ab = _device.get_abs(MTDEV_ABS_POSITION_X)
+            range_min_position_x = drs('min_position_x', ab.minimum)
+            range_max_position_x = drs('max_position_x', ab.maximum)
+            Logger.info('MTD: <%s> range position X is %d - %d' %
+                        (_fn, range_min_position_x, range_max_position_x))
 
-    def idle(self, ms):
-        '''Check state of kernel device
+            ab = _device.get_abs(MTDEV_ABS_POSITION_Y)
+            range_min_position_y = drs('min_position_y', ab.minimum)
+            range_max_position_y = drs('max_position_y', ab.maximum)
+            Logger.info('MTD: <%s> range position Y is %d - %d' %
+                        (_fn, range_min_position_y, range_max_position_y))
 
-        :Parameters:
-            `ms`: int
-                Number of milliseconds to wait for activity
+            ab = _device.get_abs(MTDEV_ABS_TOUCH_MAJOR)
+            range_min_major = drs('min_touch_major', ab.minimum)
+            range_max_major = drs('max_touch_major', ab.maximum)
+            Logger.info('MTD: <%s> range touch major is %d - %d' %
+                        (_fn, range_min_major, range_max_major))
 
-        :Return:
-            Return True if the device is idle, i.e, there are no fetched events
-            in the pipe and there is nothing to fetch from the device.
-        '''
-        if self._fd == -1:
-            raise Exception('Device closed')
-        return bool(mtdev_idle(pointer(self._device), self._fd, ms))
+            ab = _device.get_abs(MTDEV_ABS_TOUCH_MINOR)
+            range_min_minor = drs('min_touch_minor', ab.minimum)
+            range_max_minor = drs('max_touch_minor', ab.maximum)
+            Logger.info('MTD: <%s> range touch minor is %d - %d' %
+                        (_fn, range_min_minor, range_max_minor))
 
+            range_min_pressure = drs('min_pressure', 0)
+            range_max_pressure = drs('max_pressure', 255)
+            Logger.info('MTD: <%s> range pressure is %d - %d' %
+                        (_fn, range_min_pressure, range_max_pressure))
 
-    def get(self):
-        if self._fd == -1:
-            raise Exception('Device closed')
-        ev = input_event()
-        if mtdev_get(pointer(self._device), self._fd, byref(ev), 1) <= 0:
-            return None
-        return ev
+            invert_x = int(bool(drs('invert_x', 0)))
+            invert_y = int(bool(drs('invert_y', 0)))
+            Logger.info('MTD: <%s> axes inversion: X is %d, Y is %d' %
+                        (_fn, invert_x, invert_y))
 
-    def has_mtdata(self):
-        '''Return True if the device has multitouch data.
-        '''
-        if self._fd == -1:
-            raise Exception('Device closed')
-        return bool(self._device.caps.has_mtdata)
+            rotation = drs('rotation', 0)
+            Logger.info('MTD: <%s> rotation set to %d' %
+                        (_fn, rotation))
+            failures = 0
+            while _device:
+                # if device have disconnected lets try to connect
+                if failures > 1000:
+                    Logger.info('MTD: <%s> input device disconnected' % _fn)
+                    while not os.path.exists(_fn):
+                        time.sleep(0.05)
+                    # input device is back online let's recreate device
+                    _device.close()
+                    _device = Device(_fn)
+                    Logger.info('MTD: <%s> input device reconnected' % _fn)
+                    failures = 0
+                    continue
 
-    def has_slot(self):
-        '''Return True if the device has slot information.
-        '''
-        if self._fd == -1:
-            raise Exception('Device closed')
-        return bool(self._device.caps.has_slot)
+                # idle as much as we can.
+                while _device.idle(1000):
+                    continue
 
-    def has_abs(self, index):
-        '''Return True if the device has abs data.
+                # got data, read all without redoing idle
+                while True:
+                    data = _device.get()
+                    if data is None:
+                        failures += 1
+                        break
 
-        :Parameters:
-            `index`: int
-                One of const starting with a name ABS_MT_
-        '''
-        if self._fd == -1:
-            raise Exception('Device closed')
-        if index < 0 or index >= MTDEV_ABS_SIZE:
-            raise IndexError('Invalid index')
-        return bool(self._device.caps.has_abs[index])
+                    failures = 0
 
-    def get_max_abs(self):
-        '''Return the maximum number of abs information available.
-        '''
-        return MTDEV_ABS_SIZE
+                    # set the working slot
+                    if data.type == MTDEV_TYPE_EV_ABS and \
+                       data.code == MTDEV_CODE_SLOT:
+                        _slot = data.value
+                        continue
 
-    def get_slot(self):
-        '''Return the slot data.
-        '''
-        if self._fd == -1:
-            raise Exception('Device closed')
-        if self._device.caps.has_slot == 0:
-            return
-        return self._device.caps.slot
+                    # fill the slot
+                    if not (_slot in l_points):
+                        l_points[_slot] = dict()
+                    point = l_points[_slot]
+                    ev_value = data.value
+                    ev_code = data.code
+                    if ev_code == MTDEV_CODE_TRACKING_ID:
+                        if ev_value == -1:
+                            point['delete'] = True
+                        else:
+                            point['id'] = ev_value
+                    elif ev_code == MTDEV_CODE_POSITION_X:
+                        val = normalize(ev_value,
+                                        range_min_position_x,
+                                        range_max_position_x)
+                        assign_coord(point, val, invert_x, 'xy')
+                    elif ev_code == MTDEV_CODE_POSITION_Y:
+                        val = 1. - normalize(ev_value,
+                                             range_min_position_y,
+                                             range_max_position_y)
+                        assign_coord(point, val, invert_y, 'yx')
+                    elif ev_code == MTDEV_CODE_PRESSURE:
+                        point['pressure'] = normalize(ev_value,
+                                                      range_min_pressure,
+                                                      range_max_pressure)
+                    elif ev_code == MTDEV_CODE_TOUCH_MAJOR:
+                        point['size_w'] = normalize(ev_value,
+                                                    range_min_major,
+                                                    range_max_major)
+                    elif ev_code == MTDEV_CODE_TOUCH_MINOR:
+                        point['size_h'] = normalize(ev_value,
+                                                    range_min_minor,
+                                                    range_max_minor)
+                    elif ev_code == MTDEV_TYPE_EV_SYN and changes:
+                        process([l_points[x] for x in changes])
+                        continue
+                    else:
+                        # unrecognized command, ignore.
+                        continue
+                    changes.add(_slot)
 
-    def get_abs(self, index):
-        '''Return the abs data.
+                # push all changes
+                if changes:
+                    process([l_points[x] for x in changes])
 
-        :Parameters:
-            `index`: int
-                One of const starting with a name ABS_MT_
-        '''
-        if self._fd == -1:
-            raise Exception('Device closed')
-        if index < 0 or index >= MTDEV_ABS_SIZE:
-            raise IndexError('Invalid index')
-        return self._device.caps.abs[index]
+        def update(self, dispatch_fn):
+            # dispatch all event from threads
+            try:
+                while True:
+                    event_type, touch = self.queue.popleft()
+                    dispatch_fn(event_type, touch)
+            except:
+                pass
 
-
+    MotionEventFactory.register('mtdev', MTDMotionEventProvider)
