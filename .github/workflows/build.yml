@@ -22,18 +22,21 @@ jobs:
           echo "Runner OS: ${{ runner.os }}"
           sw_vers
           pwd
-
+          echo ${{ GITHUB_WORKSPACE }}
       - name: Test with pytest
         run: |
+          export KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule
           pipenv install "kivy[base]"
-          echo "ls -a /Users/runner/"
-          ls -a /Users/runner/
-          echo "ls -a /Users/runner/work"
-          ls -a /Users/runner/work
-          echo "ls -a /Users/runner/work/tests_mymodule/"
-          ls -a /Users/runner/work/tests_mymodule
-          echo "ls -a /Users/runner/work/tests_mymodule/tests_mymodule"
-          ls -a /Users/runner/work/tests_mymodule/tests_mymodule
+          echo "ls -al /Users/runner/"
+          ls -al /Users/runner/
+          echo "ls -al /Users/runners/"
+          ls -al /Users/runners/
+          echo "ls -al /Users/runner/work"
+          ls -al /Users/runner/work
+          echo "ls -al /Users/runner/work/tests_mymodule/"
+          ls -al /Users/runner/work/tests_mymodule
+          echo "ls -al /Users/runner/work/tests_mymodule/tests_mymodule"
+          ls -al /Users/runner/work/tests_mymodule/tests_mymodule
           echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/"
           ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/
           echo "ls -l /System/Library/Frameworks"
