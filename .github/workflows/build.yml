@@ -23,7 +23,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pipenv install "kivy[base]""
+          pipenv install "kivy[base]"
           echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.10/site-packages/kivy/core/window/"
           ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.10/site-packages/kivy/core/window/
           pipenv install pytest
