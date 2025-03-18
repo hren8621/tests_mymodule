@@ -25,12 +25,10 @@ jobs:
       - name: Test with pytest
         run: |
           echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
-          printf '%s\n' "$KIVY_HOME"
+          echo $KIVY_HOME
           pipenv install "kivy[base]"
           echo "ls -al /Users/runner/"
           ls -al /Users/runner/
-          echo "ls -al /Users/runners/"
-          ls -al /Users/runners/
           echo "ls -al /Users/runner/work"
           ls -al /Users/runner/work
           echo "ls -al /Users/runner/work/tests_mymodule/"
@@ -45,3 +43,4 @@ jobs:
           pipenv install pytest-mock
           pipenv --venv
           pipenv run python -m pytest
+          echo $GITHUB_WORKSPACE
