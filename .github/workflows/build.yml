@@ -25,6 +25,11 @@ jobs:
           lsb_release -a
           hostnamectl
           uname -r
+      - name: Make the script files executable
+        run: chmod +x run_pytest.sh
       - name: Test with pytest
-        run: ./run_pytest.sh
+        run: |
+          echo "ls -la /home/runner/work/tests_mymodule/tests_mymodule"
+          ls -la /home/runner/work/tests_mymodule/tests_mymodule
+          ./run_pytest.sh
           
