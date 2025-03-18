@@ -2,7 +2,6 @@ import pytest
 import os
 # from pytest_mock import MockerFixture
 from src.mymodule import mylib
-from kivy import app
 # from kivy.uix.label import Label
 # from kivy.uix.boxlayout import boxlayout
 # from kivy.core.window import Window
