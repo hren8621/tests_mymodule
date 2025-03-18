@@ -1,5 +1,5 @@
 import os
-print(os.environ)
+os.environ['KIVY_HOME'] = "/Users/runner/work/tests_mymodule/tests_mymodule"
 
 import pytest
 # from pytest_mock import MockerFixture
