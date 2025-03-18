@@ -26,6 +26,8 @@ jobs:
           pipenv install "kivy[base]"
           echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/"
           ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/
+          echo "ls -l /System/Library/Frameworks"
+          ls -l /System/Library/Frameworks
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
