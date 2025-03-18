@@ -16,6 +16,14 @@ jobs:
       - name: Turn on 'editable' mode
         run: |
           pipenv install -e .
+      - name: Print Runner OS
+        run: |
+          echo "Runner OS: ${{ runner.os }}"
+      - name: Print Sys info
+        run: |
+          lsb_release -a
+          hostnamectl
+          uname -r
       - name: Test with pytest
         run: |
           pipenv install kivy    
