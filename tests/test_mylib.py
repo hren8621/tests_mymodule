@@ -1,5 +1,6 @@
 import os
 os.environ['KIVY_HOME'] = "/Users/runner/work/tests_mymodule/tests_mymodule"
+os.environ['KIVY_USE_DEFAULTCONFIG']='1'
 
 import pytest
 # from pytest_mock import MockerFixture
