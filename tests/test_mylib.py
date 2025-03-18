@@ -1,4 +1,5 @@
 import pytest
+import os
 # from pytest_mock import MockerFixture
 from src.mymodule import mylib
 from kivy import app
@@ -10,6 +11,9 @@ class Tests:
 
     @pytest.fixture
     def popup(self):
+        env_vars = os.environ
+        print(env_vars)
+        os.environ['KIVY_DOC'] = '1'
         """Fixture to create a new PopupMessage instance before each test"""
         return mylib.PopupMessage()
         
@@ -61,7 +65,7 @@ class Tests:
     def test_create_popup(self, popup):
         popup._bgColor = [1, 1, 1, 1]
         layout = popup._createPopup()
-        
+
         expected = True
         actual = True
         assert actual == expected, "Expected True to be equal to True!"
