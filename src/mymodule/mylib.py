@@ -1,3 +1,6 @@
+import os
+os.environ['KIVY_USE_DEFAULTCONFIG']='1'
+
 from kivy import Config
 Config.set('kivy', 'log_level', 'debug')
 
