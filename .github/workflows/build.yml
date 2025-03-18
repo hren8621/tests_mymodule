@@ -35,17 +35,13 @@ jobs:
           echo $LD_LIBRARY_PATH
       - name: Test with pytest
         run: |
+          echo 
           echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
           echo $KIVY_HOME
+          echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+          echo "new LD lib path ="
+          echo $LD_LIBRARY_PATH
           pipenv install "kivy[base]"
-          echo "ls -al /Users/runner/"
-          ls -al /Users/runner/
-          echo "ls -al /Users/runner/work"
-          ls -al /Users/runner/work
-          echo "ls -al /Users/runner/work/tests_mymodule/"
-          ls -al /Users/runner/work/tests_mymodule
-          echo "ls -al /Users/runner/work/tests_mymodule/tests_mymodule"
-          ls -al /Users/runner/work/tests_mymodule/tests_mymodule
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
