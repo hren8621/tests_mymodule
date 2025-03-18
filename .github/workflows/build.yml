@@ -26,21 +26,16 @@ jobs:
           hostnamectl
           uname -r
           echo "ls -l /usr/lib and /usr/lib/x86..."
-          ls -l /usr/lib
           ls -l /usr/lib/x86_64-linux-gnu
-          sudo apt-get update
-          sudo apt-get install libmtdev1t64
-          echo "ls -l /usr/lib/x86..."
-          ls -l /usr/lib/x86_64-linux-gnu
+          echo "LD_LIBRARY_PATH = "
           echo $LD_LIBRARY_PATH
       - name: Test with pytest
         run: |
-          echo 
           echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
           echo $KIVY_HOME
           echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
           echo "new LD lib path ="
-          echo $LD_LIBRARY_PATH
+          echo $LD_LIBRARY_PATHs
           pipenv install "kivy"
           pipenv install pytest
           pipenv install pytest-mock

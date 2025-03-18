@@ -11,11 +11,11 @@ authors = [
 ]
 description = "A package that allows developers to create popup messages to aid in debugging and add some spice into their coding process."
 readme = "README.md"
-keywords = ["popup", "debugging", "notifications", "GUI", "Kivy"]
+keywords = ["popup", "debugging", "notifications", "GUI"]
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = [
-  "kivy[base]"
+  "kivy"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
