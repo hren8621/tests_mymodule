@@ -26,9 +26,11 @@ jobs:
           uname -r
           ls -l /usr/lib
           sudo apt-get install libmtdev-dev
+          ls -l /usr/lib
       - name: Test with pytest
         run: |
-          pipenv install kivy    
+          pipenv install kivy
+          ls -l /home/runner/local/share/virtualenvs/tests_mymodule-4ykKIPa5
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
