@@ -19,10 +19,13 @@ jobs:
       - name: Print Runner OS
         run: |
           echo "Runner OS: ${{ runner.os }}"
+          sw_vers
 
       - name: Test with pytest
         run: |
-          pipenv install kivy
+          pipenv install "kivy[base]""
+          echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.10/site-packages/kivy/core/window/"
+          ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.10/site-packages/kivy/core/window/
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
