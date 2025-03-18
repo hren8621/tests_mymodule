@@ -1,7 +1,3 @@
-import os
-os.environ['KIVY_USE_DEFAULTCONFIG']='1'
-
-import kivy
 import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib
