@@ -3,11 +3,11 @@ name: CI / CD
 on: [push] # TO CHANGE: Should be on pull request
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.10"]
     steps:
       - uses: actions/checkout@v4
       - name: Install Python, pipenv and Pipfile packages
@@ -22,6 +22,18 @@ jobs:
           echo "Runner OS: ${{ runner.os }}"
           sw_vers
           pwd
+      - name: Print Sys info
+        run: |
+          lsb_release -a
+          hostnamectl
+          uname -r
+          echo "ls -l /usr/lib and /usr/lib/x86..."
+          ls -l /usr/lib
+          ls -l /usr/lib/x86_64-linux-gnu
+          sudo apt-get update
+          sudo apt-get install libmtdev1t64
+          echo "ls -l /usr/lib/x86..."
+          ls -l /usr/lib/x86_64-linux-gnu
       - name: Test with pytest
         run: |
           echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
@@ -29,18 +41,13 @@ jobs:
           pipenv install "kivy[base]"
           echo "ls -al /Users/runner/"
           ls -al /Users/runner/
-          echo "ls -al /Users/runner/Documents"
-          ls -al /Users/runner/Documents
           echo "ls -al /Users/runner/work"
           ls -al /Users/runner/work
           echo "ls -al /Users/runner/work/tests_mymodule/"
           ls -al /Users/runner/work/tests_mymodule
           echo "ls -al /Users/runner/work/tests_mymodule/tests_mymodule"
           ls -al /Users/runner/work/tests_mymodule/tests_mymodule
-          echo "ls -l /System/Library/Frameworks"
-          ls -l /System/Library/Frameworks
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
           pipenv run python -m pytest
-          echo $GITHUB_WORKSPACE
