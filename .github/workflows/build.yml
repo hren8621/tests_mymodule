@@ -22,7 +22,6 @@ jobs:
           echo "Runner OS: ${{ runner.os }}"
           sw_vers
           pwd
-          echo ${{ GITHUB_WORKSPACE }}
       - name: Test with pytest
         run: |
           echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
