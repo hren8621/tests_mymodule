@@ -3,7 +3,7 @@ os.environ['KIVY_DOC'] = '1'
 
 import pytest
 # from pytest_mock import MockerFixture
-from src.mymodule import mylib
+from mymodule import mylib
 # from kivy.uix.label import Label
 # from kivy.uix.boxlayout import boxlayout
 # from kivy.core.window import Window
