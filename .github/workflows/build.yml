@@ -20,8 +20,6 @@ jobs:
       - name: Print Runner OS
         run: |
           echo "Runner OS: ${{ runner.os }}"
-          sw_vers
-          pwd
       - name: Print Sys info
         run: |
           lsb_release -a
