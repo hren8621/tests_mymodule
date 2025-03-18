@@ -2,11 +2,11 @@ name: CI / CD
 on: [push] # TO CHANGE: Should be on pull request
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 5
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.10"]
     steps:
       - uses: actions/checkout@v4
       - name: Install Python, pipenv and Pipfile packages
@@ -36,7 +36,7 @@ jobs:
           pipenv install kivy
           echo "ls -l /home/runner/work/tests_mymodule/tests_mymodule/"
           ls -l /home/runner/work/tests_mymodule/tests_mymodule/
-           cho "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib"
+          echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib
           echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers
