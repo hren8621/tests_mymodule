@@ -37,7 +37,7 @@ jobs:
           echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib
           echo "copying mtdev.py"
-          cp /home/runner/work/tests_mymodule/mtdev.py /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib/mtdev.py
+          cp /home/runner/work/tests_mymodule/tests_mymodule/mtdev.py /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib/mtdev.py
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
