@@ -21,16 +21,19 @@ jobs:
         run: |
           echo "Runner OS: ${{ runner.os }}"
           sw_vers
+          pwd
 
       - name: Test with pytest
         run: |
           pipenv install "kivy[base]"
           echo "ls -a /Users/runner/"
           ls -a /Users/runner/
+          echo "ls -a /Users/runner/work"
+          ls -a /Users/runner/work
           echo "ls -a /Users/runner/work/tests_mymodule/"
-          ls -a /Users/runner/work/tests_mymodule"
-          echo "ls -a /Users/runner/work/tests_mymodule/tests_mymodule/"
-          ls -a /Users/runner/work/tests_mymodule/tests_mymodule"
+          ls -a /Users/runner/work/tests_mymodule
+          echo "ls -a /Users/runner/work/tests_mymodule/tests_mymodule"
+          ls -a /Users/runner/work/tests_mymodule/tests_mymodule
           echo "ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/"
           ls -l /Users/runner/.local/share/virtualenvs/tests_mymodule-qobL2vCM/lib/python3.13/site-packages/kivy/core/window/
           echo "ls -l /System/Library/Frameworks"
