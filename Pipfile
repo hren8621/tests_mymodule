@@ -9,10 +9,11 @@ verify_ssl = true
 name = "testpypi"
 
 [packages]
+kivy = "*"
 pytest = "*"
 pytest-mock = "*"
 popmessage = {version = "==0.0.2", index = "testpypi"}
-kivy = {extras = ["base"], version = "*"}
+
 
 [dev-packages]
 

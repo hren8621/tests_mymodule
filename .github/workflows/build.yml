@@ -41,7 +41,7 @@ jobs:
           echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
           echo "new LD lib path ="
           echo $LD_LIBRARY_PATH
-          pipenv install "kivy[base]"
+          pipenv install "kivy"
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
