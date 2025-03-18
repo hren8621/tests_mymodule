@@ -33,7 +33,6 @@ jobs:
           echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers
           echo "copying mtdev.py"
-          sudo cp /home/runner/work/tests_mymodule/tests_mymodule/mtdev.py /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers
           echo "**after copy ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/input/providers
           pipenv install pytest
