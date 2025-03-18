@@ -25,6 +25,7 @@ jobs:
           hostnamectl
           uname -r
           ls -l /usr/lib
+          sudo apt-get install libmtdev-dev
       - name: Test with pytest
         run: |
           pipenv install kivy    
