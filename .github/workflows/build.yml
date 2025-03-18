@@ -25,7 +25,8 @@ jobs:
           echo ${{ GITHUB_WORKSPACE }}
       - name: Test with pytest
         run: |
-          export KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule
+          echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
+          printf '%s\n' "$KIVY_HOME"
           pipenv install "kivy[base]"
           echo "ls -al /Users/runner/"
           ls -al /Users/runner/
