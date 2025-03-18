@@ -2,9 +2,6 @@
 # from kivy.uix.label import Label
 # from kivy.uix.boxlayout import BoxLayout
 # from kivy.core.window import Window
-import os
-del os.environ['KIVY_DOC']
-
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout

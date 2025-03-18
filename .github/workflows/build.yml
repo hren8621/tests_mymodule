@@ -25,15 +25,25 @@ jobs:
           hostnamectl
           uname -r
           ls -l /usr/lib
-          sudo apt-get install libmtdev-dev
-          ls -l /usr/lib
       - name: Test with pytest
         run: |
           pipenv install kivy
+          echo "ls -l /home/runner/work/tests_mymodule/"
           ls -l /home/runner/work/tests_mymodule/
+          echo "ls -l /home/runner/work/tests_mymodule/tests_mymodule/"
           ls -l /home/runner/work/tests_mymodule/tests_mymodule/
+          echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/
+          echo "copying mtdev.py"
+          cp /home/runner/work/tests_mymodule/mtdev.py /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib/mtdev.py
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
+          echo "after pipenv --venv"
+          echo "ls -l /home/runner/work/tests_mymodule/"
+          ls -l /home/runner/work/tests_mymodule/
+          echo "ls -l /home/runner/work/tests_mymodule/tests_mymodule/"
+          ls -l /home/runner/work/tests_mymodule/tests_mymodule/
+          echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/"
+          ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/
           pipenv run python -m pytest
