@@ -1,3 +1,6 @@
+from kivy import Config
+Config.set('kivy', 'log_level', 'debug')
+
 import pytest
 # from pytest_mock import MockerFixture
 from mymodule import mylib

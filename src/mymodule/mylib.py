@@ -1,3 +1,6 @@
+from kivy import Config
+Config.set('kivy', 'log_level', 'debug')
+
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
