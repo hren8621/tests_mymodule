@@ -28,24 +28,20 @@ jobs:
       - name: Test with pytest
         run: |
           pipenv install kivy
-          echo "ls -l /home/runner/work/tests_mymodule/"
-          ls -l /home/runner/work/tests_mymodule/
           echo "ls -l /home/runner/work/tests_mymodule/tests_mymodule/"
           ls -l /home/runner/work/tests_mymodule/tests_mymodule/
-          echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/"
-          ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/
           echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib"
           ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib
           echo "copying mtdev.py"
-          cp /home/runner/work/tests_mymodule/tests_mymodule/mtdev.py /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib/mtdev.py
+          sudo cp /home/runner/work/tests_mymodule/tests_mymodule/mtdev.py /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib/
+          echo "**after copy ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib"
+          ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib
           pipenv install pytest
           pipenv install pytest-mock
           pipenv --venv
-          echo "after pipenv --venv"
-          echo "ls -l /home/runner/work/tests_mymodule/"
-          ls -l /home/runner/work/tests_mymodule/
+          echo "**after pipenv --venv"
           echo "ls -l /home/runner/work/tests_mymodule/tests_mymodule/"
           ls -l /home/runner/work/tests_mymodule/tests_mymodule/
-          echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/"
-          ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/
+          echo "ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib"
+          ls -l /home/runner/.local/share/virtualenvs/tests_mymodule-4ykKIPa5/lib/python3.10/site-packages/kivy/lib
           pipenv run python -m pytest

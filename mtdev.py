@@ -26,8 +26,12 @@ from ctypes import cdll, Structure, c_ulong, c_int, c_ushort, \
                    c_void_p, pointer, POINTER, byref
 
 # load library
-#if 'KIVY_DOC' not in os.environ:
-#    libmtdev = cdll.LoadLibrary('libmtdev.so.1')
+if 'KIVY_DOC' not in os.environ:
+    try:
+        libmtdev = cdll.LoadLibrary('libmtdev.so.1')
+    except OSError:
+        libmtdev = None
+        print("libmtdev.so.1 not found, multi-touch events might be limited")
 
 # from linux/input.h
 MTDEV_CODE_SLOT          = 0x2f  # MT slot being modified
