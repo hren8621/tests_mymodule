@@ -24,6 +24,7 @@ jobs:
           lsb_release -a
           hostnamectl
           uname -r
+          ls -l /usr/lib
       - name: Test with pytest
         run: |
           pipenv install kivy    
