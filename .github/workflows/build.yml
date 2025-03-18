@@ -3,7 +3,7 @@ name: CI / CD
 on: [push] # TO CHANGE: Should be on pull request
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-13
     timeout-minutes: 5
     strategy:
       matrix:
