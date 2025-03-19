@@ -3,19 +3,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[[source]]
-url = "https://test.pypi.org/simple"
-verify_ssl = true
-name = "testpypi"
-
 [packages]
-kivy = "*"
+kivy = {extras = ["base"], version = "*"}
+kivy-examples = "*"
+build = "*"
 pytest = "*"
-pytest-mock = "*"
-popmessage = {version = "==0.0.2", index = "testpypi"}
-
+pytest_mock = "*"
+popmessage = {file = ".", editable = true}
 
 [dev-packages]
+pytest = "*"
 
 [requires]
-python_version = "3.13"
+python_version = "3"

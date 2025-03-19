@@ -1,29 +1,45 @@
-
-name: CI / CD
-on: [push] # TO CHANGE: Should be on pull request
+name: Build and test the package
+on: [push]
 jobs:
   build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python, pipenv and Pipfile packages
+        uses: kojoru/prepare-pipenv@v1
+        with:
+          python-version: "3.11"
+      - name: Build package
+        run: |
+          pipenv install build
+          pipenv run python -m build .
+
+  run_pytest:
+    needs: [build]
     runs-on: macos-latest
     timeout-minutes: 5
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+      - name: Install Python, pipenv and Pipfile packages
+        uses: kojoru/prepare-pipenv@v1
         with:
-          python-version: "3.10"
-      - name: Print Runner OS
+          python-version: ${{ matrix.python-version }}
+      - name: Regenerate lock file
         run: |
-          echo "Runner OS: ${{ runner.os }}"
+          pipenv lock
       - name: Install dependencies
         env:
-          USE_ANGEL_GL_BACKEND: "0"
+          USE_ANGLE_GL_BACKEND: "0"
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install "kivy[base]" 
-          python -m pip install pytest
+          pipenv install pytest 
+          pipenv install pygame
+          pipenv install "kivy[base]"
+      - name: Turn on 'editable' mode
+        run: |
+          pipenv install -e .
       - name: Test with pytest
         run: |
-          python -m pytest
+          pipenv run python -m pytest
