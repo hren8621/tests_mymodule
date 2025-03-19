@@ -1,37 +1,45 @@
+name: Build and test the package
+on:
+  pull_request:
+    branches: [main]
 
-name: CI / CD
-on: [push] # TO CHANGE: Should be on pull request
 jobs:
   build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python, pipenv and Pipfile packages
+        uses: kojoru/prepare-pipenv@v1
+        with:
+          python-version: "3.11"
+      - name: Build package
+        run: |
+          pipenv install build
+          pipenv run python -m build .
+
+  run_pytest:
+    needs: [build]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.11", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - name: Install Python, pipenv and Pipfile packages
         uses: kojoru/prepare-pipenv@v1
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Regenerate lock file
+        run: |
+          pipenv lock
       - name: Turn on 'editable' mode
         run: |
           pipenv install -e .
-      - name: Print Runner OS
-        run: |
-          echo "Runner OS: ${{ runner.os }}"
-      - name: Print Sys info
-        run: |
-          lsb_release -a
-          hostnamectl
-          uname -r
-      - name: Make the script files executable
-        run: chmod +x run_pytest.sh
       - name: Test with pytest
         run: |
-          echo "ls -la /home/runner/work/tests_mymodule/tests_mymodule"
-          ls -la /home/runner/work/tests_mymodule/tests_mymodule
-          ./run_pytest.sh
-          cat ./pytest-log.txt
-          cat ./run-pytest-log.txt
-          
+          pipenv install kivy
+          pipenv install pytest-mock
+          pipenv run python -m pytest
+      
+      
