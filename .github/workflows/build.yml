@@ -1,4 +1,4 @@
-name: Build and test the package
+name: CI / CD
 on: [push]
 jobs:
   build:
