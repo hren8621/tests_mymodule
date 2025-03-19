@@ -1,9 +1,7 @@
-from src.mymodule.mylib import *
+from mymodule.mylib import PopupMessage
 
 '''
-
 Run this file to execute example code putting our package into practice
-
 '''
 # Example1 default pop-up message window
 myPopup1 = PopupMessage()
