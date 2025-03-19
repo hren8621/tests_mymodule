@@ -32,4 +32,6 @@ jobs:
           echo "ls -la /home/runner/work/tests_mymodule/tests_mymodule"
           ls -la /home/runner/work/tests_mymodule/tests_mymodule
           ./run_pytest.sh
+          cat ./pytest-log.txt
+          cat ./run-pytest-log.txt
           
