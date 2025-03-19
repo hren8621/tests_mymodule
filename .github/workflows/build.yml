@@ -16,7 +16,7 @@ jobs:
 
   run_pytest:
     needs: [build]
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 5
     strategy:
       matrix:
@@ -44,4 +44,5 @@ jobs:
         env:
           USE_ANGLE_GL_BACKEND: "0"
         run: |
+          sudo apt-get 
           pipenv run python -m pytest
