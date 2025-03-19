@@ -41,5 +41,7 @@ jobs:
         run: |
           pipenv install -e .
       - name: Test with pytest
+        env:
+          USE_ANGLE_GL_BACKEND: "0"
         run: |
           pipenv run python -m pytest
