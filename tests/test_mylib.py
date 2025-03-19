@@ -2,7 +2,7 @@ from kivy import Config
 Config.set('kivy', 'log_level', 'debug')
 
 import pytest
-# from pytest_mock import MockerFixture
+from pytest_mock import MockerFixture
 from mymodule import mylib
 # from kivy.uix.label import Label
 # from kivy.uix.boxlayout import boxlayout
