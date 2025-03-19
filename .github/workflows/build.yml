@@ -1,8 +1,5 @@
 name: Build and test the package
-on:
-  pull_request:
-    branches: [main]
-
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
