@@ -3,39 +3,30 @@ name: CI / CD
 on: [push] # TO CHANGE: Should be on pull request
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 5
     strategy:
       matrix:
         python-version: ["3.10"]
     steps:
       - uses: actions/checkout@v4
-      - name: Install Python, pipenv and Pipfile packages
-        uses: kojoru/prepare-pipenv@v1
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.10"
       - name: Turn on 'editable' mode
         run: |
           pipenv install -e .
       - name: Print Runner OS
         run: |
           echo "Runner OS: ${{ runner.os }}"
-      - name: Print Sys info
+      - name: Install dependencies
+        env:
+          USE_ANGEL_GL_BACKEND: "0"
         run: |
-          lsb_release -a
-          hostnamectl
-          uname -r
+          python -m pip install --upgrade pip
+          python -m pip install "kivy[base]" 
+          python -m pip install pytest
       - name: Test with pytest
         run: |
-          echo "BEFORE: ls -l /usr/lib/x86..."
-          ls -l /usr/lib/x86_64-linux-gnu
-          echo "KIVY_HOME=/Users/runner/work/tests_mymodule/tests_mymodule" >> "$GITHUB_ENV"
-          echo $KIVY_HOME
-          echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
-          echo "new LD lib path="
-          echo $LD_LIBRARY_PATH
-          pipenv install "kivy[full]"
-          pipenv install pytest
-          pipenv install pytest-mock
-          pipenv --venv
-          pipenv run python -m pytest
+          python -m pytest
